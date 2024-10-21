@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booster Pack</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+        }
+        .booster {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .card {
+            margin: 10px;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .card img {
+            width: 250px;
+            height: auto;
+            border-radius: 5px;
+        }
+        .buttons {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .buttons button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .buttons button:hover {
+            background-color: #777;
+        }
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Booster Pack (Set: {{ swu_set | upper }})</h1>
+
+    <div class="buttons">
+        <a href="/?set=sor"><button>SOR</button></a>
+        <a href="/?set=shd"><button>SHD</button></a>
+        <a href="/?set=any"><button>All Cards</button></a>
+    </div>
+
+    <div class="booster">
+        {% for card in booster %}
+        <div class="card">
+            <img src="{{ card[16] }}" alt="Card Image">
+            <p>{{ card[2] }} {{ card[3] }}</p>
+            <p>{{ card[0] | upper }} - {{ card[1] }} - {{ card[17] }}</p>
+            <p>{{ card[-1] }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
