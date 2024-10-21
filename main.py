@@ -5,12 +5,15 @@ import copy
 
 app = Flask(__name__, template_folder='templates')
 
+
 # Load the card collection from CSV
 collection = []
 with open('SWU_all_cards.csv', 'r', encoding='ISO-8859-1') as file:
     Reader = csv.reader(file)
     for line in Reader:
         collection.append(line)
+
+
 
 full_card_pool = []
 
@@ -25,11 +28,13 @@ for c in collection[1:]:
 def get_booster(set='any'):
     card_pool = {}
 
+
     index = 0
     for c in full_card_pool:
-        if set == 'any' or c[0] == set:
+        if (set == 'any' and c[0] != 'twi') or c[0] == set:
             card_pool[index] = c
             index += 1
+
 
     leaders = {}
     bases = {}
