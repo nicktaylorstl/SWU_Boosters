@@ -25,7 +25,7 @@ for c in collection[1:]:
         full_card_pool.append(card)
 
 # This creates one booster pack according to the distribution rules
-def get_booster(set='any',qty = "2",):
+def get_booster(set='sor',qty = "1",):
 
     card_pool = {}
     packs = []
@@ -101,7 +101,7 @@ def get_booster(set='any',qty = "2",):
 @app.route('/')
 def index():
     # Get the set and quantity for each booster from query parameters
-    qty_sor = request.args.get('qty_sor', '0')
+    qty_sor = request.args.get('qty_sor', '1')
     qty_shd = request.args.get('qty_shd', '0')
     qty_twi = request.args.get('qty_twi', '0')
 
@@ -120,4 +120,4 @@ def index():
     return render_template('booster_pack.html', boosters=boosters, swu_set='multiple')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
