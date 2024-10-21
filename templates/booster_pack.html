@@ -36,9 +36,20 @@
             margin: 20px 0;
             text-align: center;
         }
+        .buttons select {
+            padding: 10px;
+            margin-right: 10px;
+            font-size: 16px;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .buttons select:hover {
+            background-color: #777;
+        }
         .buttons button {
             padding: 10px 20px;
-            margin-right: 10px;
             font-size: 16px;
             cursor: pointer;
             background-color: #555;
@@ -57,31 +68,65 @@
 <body>
     <h1>Booster Pack (Set: {{ swu_set | upper }})</h1>
 
-    <div class="buttons">
-        <a href="/?set=sor"><button>SOR</button></a>
-        <a href="/?set=shd"><button>SHD</button></a>
-        <a href="/?set=twi"><button>TWI</button></a>
-        <a href="/?set=any"><button>All Cards</button></a>
-    </div>
+    <!-- Add the form here with dropdowns for each set's quantity -->
+    <form method="GET" action="/">
+        <div class="buttons">
+            <label for="qty_sor" style="font-size: 25px;">SOR:</label>
+            <select id="qty_sor" name="qty_sor">
+                {% for i in range(7) %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
 
-    <div class="booster">
-        {% for card in booster %}
-        <div class="card">
-            <img src="{{ card[16] }}" alt="Card Image">
-            <p>{{ card[2] }} {{ card[3] }}</p>
-            <p>{{ card[0] | upper }} - {{ card[1] }} - {{ card[17] }}</p>
-            <p>{{ card[-1] }}</p>
+            <label for="qty_shd" style="font-size: 25px;">SHD:</label>
+            <select id="qty_shd" name="qty_shd">
+                {% for i in range(7) %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="qty_twi" style="font-size: 25px;">TWI:</label>
+            <select id="qty_twi" name="qty_twi">
+                {% for i in range(7) %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Generate Packs</button>
+        </div>
+    </form>
+
+    <!-- Booster packs display -->
+    <div class="boosters">
+        {% for booster in boosters %}
+        <div class="booster">
+            <h2 style="margin-bottom: 0;">Booster #{{ loop.index }}</h2>
+            <div style="width: 100%; height: 10px;"></div>
+            <h2 style="margin-top: 0;">{{ booster[0][0] | upper }}</h2>
+            <div style="width: 100%; height: 20px;"></div> <!-- This adds a line break -->
+            {% for card in booster %}
+            <div class="card">
+                <img src="{{ card[16] }}" alt="Card Image">
+                <p><b>{{ card[2] }}</b> {{ card[3] }}</p>
+                <p>{{ card[0] | upper }} - {{ card[1] }} - {{ card[17] }}</p>
+                <p><b>{{ card[-1] }}</b></p>
+            </div>
+            {% if loop.index == 2 %}
+            {% endif %}
+            
+            {% endfor %}
+            <div style="width: 100%; height: 50px;"></div>
+
+
         </div>
         {% endfor %}
-    </div>
+    </div>    
 
+    <!-- Footer -->
     <footer>
         <p>The boosters are based on the card distribution as explained by FFG <a href="https://starwarsunlimited.com/articles/boosting-ahead-of-release" target="_blank">HERE</a>.</p>
-        <p></p>
         <p>This is an unofficial fan site. The literal and graphical information presented on this site about Star Wars: Unlimited, including card images and aspect symbols, is copyright Fantasy Flight Publishing Inc and Lucasfilm Ltd. SWUDB is not produced by or endorsed by FFG or LFL.</p>
-        <p></p>
         <p>This is only possible with the wonderful work from the <a href="https://www.swu-db.com/api" target="_blank">SWU-DB API</a>. Check it out and use it for your projects</p> 
-        
     </footer>
 
 </body>
