@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 import csv
 import random
 import copy
@@ -118,6 +118,36 @@ def index():
 
     # Render the HTML template with the booster packs and current set
     return render_template('booster_pack.html', boosters=boosters, swu_set='multiple')
+
+@app.route('/generate_csv')
+def generate_csv():
+    # Get the booster packs from the request args
+    qty_sor = request.args.get('qty_sor', '1')
+    qty_shd = request.args.get('qty_shd', '0')
+    qty_twi = request.args.get('qty_twi', '0')
+
+    boosters = []
+    if int(qty_sor) > 0:
+        boosters.extend(get_booster(set='sor', qty=qty_sor))
+    if int(qty_shd) > 0:
+        boosters.extend(get_booster(set='shd', qty=qty_shd))
+    if int(qty_twi) > 0:
+        boosters.extend(get_booster(set='twi', qty=qty_twi))
+
+    # Create CSV string
+    csv_string = "set,number,name,subtitle,type,aspects,traits,arenas,cost,power,hp,fronttext,backtext,epicaction,doublesided,backart,frontart,rarity,marketprice\n"  # Header row
+    for booster in boosters:
+        for card in booster:
+            fronttext = str(card[11]).replace(',', '')
+            backtext = str(card[12]).replace(',', '')
+            csv_string += f'{card[0]},\"{card[1]}\",\"{card[2]}\",\"{card[3]}\",\"{card[4]}\",\"{card[5]}\",\"{card[6]}\",\"{card[7]}\",\"{card[8]}\",\"{card[9]}\",\"{card[10]}\",\"{fronttext}\",\"{backtext}\",\"{card[13]}\",\"{card[14]}\",\"{card[15]}\",\"{card[16]}\",\"{card[17]}\",\"{card[18]}\"\n'  # Adjust columns as needed
+
+    # Return the CSV as a response
+    return Response(
+        csv_string,
+        mimetype='text/csv',
+        headers={"Content-Disposition": "attachment;filename=booster_packs.csv"}
+    )
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
