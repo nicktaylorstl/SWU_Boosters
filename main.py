@@ -65,15 +65,25 @@ def get_booster(set='sor',qty = "1",):
         base = copy.deepcopy(card_pool[base_index])
         base.append('1 Base')
         pack.append(base)
-
+        
+        common_indeces = []
         for i in range(9):
             common_index = random.choice(list(commons.keys()))
+            while common_index in common_indeces:
+                common_index = random.choice(list(commons.keys()))
+            common_indeces.append(common_index)
+
             common = copy.deepcopy(card_pool[common_index])
             common.append(f"{i+1} of 9 Commons")
             pack.append(common)
-
+        
+        uncommon_indeces = []
         for i in range(3):
             uncommon_index = random.choice(list(uncommons.keys()))
+            while uncommon_index in uncommon_indeces:
+                uncommon_index = random.choice(list(uncommons.keys()))
+            uncommon_indeces.append(uncommon_index)
+            
             uncommon = copy.deepcopy(card_pool[uncommon_index])
             uncommon.append(f"{i+1} of 3 Uncommons")
             pack.append(uncommon)
