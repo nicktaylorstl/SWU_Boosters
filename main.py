@@ -111,7 +111,7 @@ def get_booster(set='sor',qty = "1",):
 @app.route('/')
 def index():
     # Get the set and quantity for each booster from query parameters
-    qty_sor = request.args.get('qty_sor', '1')
+    qty_sor = request.args.get('qty_sor', '0')
     qty_shd = request.args.get('qty_shd', '0')
     qty_twi = request.args.get('qty_twi', '0')
 
@@ -132,7 +132,7 @@ def index():
 @app.route('/generate_csv')
 def generate_csv():
     # Get the booster packs from the request args
-    qty_sor = request.args.get('qty_sor', '1')
+    qty_sor = request.args.get('qty_sor', '0')
     qty_shd = request.args.get('qty_shd', '0')
     qty_twi = request.args.get('qty_twi', '0')
 
