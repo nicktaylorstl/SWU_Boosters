@@ -3,7 +3,6 @@ import csv
 import json
 import random
 import copy
-import jsonify
 
 app = Flask(__name__, template_folder='templates')
 
