@@ -150,14 +150,13 @@
             const checkboxes = document.querySelectorAll('input[name="selected_cards"]:checked');
             
             checkboxes.forEach(checkbox => {
-                const [id, cardNumber,card_type] = checkbox.value.split(',');
+                const [id, cardNumber, card_type] = checkbox.value.split(',');
                 if (id && cardNumber) {
-                    selectedCards.push({ id: id + "_" + cardNumber, count: 1, card_type: card_type});
+                    selectedCards.push({ id: id + "_" + cardNumber, count: 1, card_type: card_type });
                 }
             });
 
             const jsonData = {
-
                 deck: selectedCards  // Key change here to match the backend
             };
 
@@ -178,15 +177,27 @@
             })
             .then(blob => {
                 const url = window.URL.createObjectURL(blob);
+                
+                // Open a new tab and display the JSON content
+                const newTab = window.open();
+                const reader = new FileReader();
+                reader.onload = function() {
+                    newTab.document.write('<pre>' + reader.result + '</pre>');
+                    newTab.document.close();
+                };
+                reader.readAsText(blob);
+
+                // Trigger download
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'selected_cards.json';
+                a.download = 'swu_sealed_deck.json';
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
             })
             .catch(error => console.error('Error during fetch:', error));
         }
+
 
 
 
