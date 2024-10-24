@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, Response
 import csv
+import json
 import random
 import copy
+import jsonify
 
 app = Flask(__name__, template_folder='templates')
 
@@ -158,6 +160,44 @@ def generate_csv():
         mimetype='text/csv',
         headers={"Content-Disposition": "attachment;filename=booster_packs.csv"}
     )
+
+@app.route('/generate_json', methods=['POST'])
+def generate_json():
+    try:
+        # Get the selected cards from the request JSON
+        data = request.get_json()
+        
+        # Check if the data is valid
+        if not data or 'deck' not in data:
+            return Response("Invalid JSON data", status=400)
+
+        # Extract the selected cards (in the 'deck' category)
+        
+        leader = []
+        base = []
+        deck = []
+        selected_cards_data = data['deck']
+        for card in selected_cards_data:
+            if card['card_type'] =='Leader': leader.append({"id": card["id"], "count": card["count"]})
+            elif card['card_type'] =='Base': base.append({"id": card["id"], "count": card["count"]})
+            else: deck.append({"id": card["id"], "count": card["count"]})
+        swudb_deck_data = {}
+        swudb_deck_data['metadata'] = {"name":"Sealed Format Deck","author":"SWU-Boosters.onrender.com"}
+        swudb_deck_data['leader'] = leader[0]
+        swudb_deck_data['secondleader'] = leader[1] if len(leader) > 1 and leader[1] is not None else None
+        swudb_deck_data['base'] = base[0]
+        swudb_deck_data['deck'] = deck
+
+        # Return the selected cards as a downloadable JSON file
+        response = Response(json.dumps(swudb_deck_data, indent=4), mimetype='application/json')
+        response.headers["Content-Disposition"] = "attachment; filename=selected_cards.json"
+        return response
+
+    except Exception as e:
+        # Handle any unexpected errors
+        print(f"Error processing JSON data: {e}")
+        return Response("Error processing JSON data", status=500)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
