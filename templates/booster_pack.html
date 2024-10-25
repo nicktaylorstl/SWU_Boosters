@@ -109,7 +109,8 @@
         <div class="boosters">
             {% for booster in boosters %}
             <div class="booster">
-                <h2>Booster #{{ loop.index }}</h2>
+                <h2>Booster #{{ loop.index }} - {{booster[0][0] | upper}}</h2>
+                <div style="width: 100%; height: 10px;"></div>
                 {% for card in booster %}
                 <div class="card">
                     <img src="{{ card[16] }}" alt="Card Image">
@@ -124,6 +125,11 @@
             </div>
             {% endfor %}
         </div>
+
+        <div class="buttons">
+            <button type="button" onclick="toggleSelectAll()">Select All</button>
+        </div>
+        <p style="text-align: center;">(Only the first leader and base selected will be included in the json file)</p>
 
         <div class="buttons">
             <button type="button" onclick="generateJSON()">Create Deck Json</button>
@@ -198,7 +204,16 @@
             .catch(error => console.error('Error during fetch:', error));
         }
 
+        let allSelected = false;
 
+        function toggleSelectAll() {
+            const checkboxes = document.querySelectorAll('input[name="selected_cards"]');
+            allSelected = !allSelected; // Toggle selection state
+
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = allSelected; // Select or deselect each checkbox
+            });
+        }
 
 
     </script>

@@ -37,7 +37,7 @@ def get_booster(set='sor',qty = "1",):
             card_pool[index] = c
             index += 1
 
-
+    rare_leaders = {}
     leaders = {}
     bases = {}
     commons = {}
@@ -49,15 +49,18 @@ def get_booster(set='sor',qty = "1",):
 
         pack = []
         for k, v in card_pool.items():
-            if v[4] == 'Leader': leaders[k] = v
-            elif v[4] == 'Base': bases[k] = v
+            if v[4] == 'Leader' and v[17] in ['Rare','Special']: rare_leaders[k] = v
+            elif v[4] == 'Leader': leaders[k] = v
+            elif v[4] == 'Base' and v[17] != 'Rare' : bases[k] = v
             elif v[17] == 'Common': commons[k] = v
             elif v[17] == 'Uncommon': uncommons[k] = v
             elif v[17] == 'Rare': rares[k] = v
             elif v[17] == 'Legendary': legendaries[k] = v
 
         # 1 Leader, 1 Base, 9 Commons, 3 Uncommons, 1 Rare/Legendary, 1 random card
-        leader_index = random.choice(list(leaders.keys()))
+        random_number = random.randint(1, 6)
+        if random_number == 6: leader_index = random.choice(list(rare_leaders.keys()))
+        else: leader_index = random.choice(list(leaders.keys()))
         leader = copy.deepcopy(card_pool[leader_index])
         leader.append('1 Leader')
         pack.append(leader)
