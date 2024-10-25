@@ -52,6 +52,7 @@ def get_booster(set='sor',qty = "1",):
             if v[4] == 'Leader' and v[17] in ['Rare','Special']: rare_leaders[k] = v
             elif v[4] == 'Leader': leaders[k] = v
             elif v[4] == 'Base' and v[17] != 'Rare' : bases[k] = v
+            elif v[4] == 'Base' and v[0] == 'twi': bases[k] = v
             elif v[17] == 'Common': commons[k] = v
             elif v[17] == 'Uncommon': uncommons[k] = v
             elif v[17] in ['Rare','Special']: rares[k] = v
