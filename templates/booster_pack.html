@@ -1,21 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link href="https://fonts.cdnfonts.com/css/star-wars" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booster Pack</title>
     <style>
+        @import url('https://fonts.cdnfonts.com/css/star-wars');
+    
+                                                
         body {
             background-color: black;
-            color: white;
+            color: #FFC62D;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
+            z-index: 0;
         }
+        .star {
+            position: absolute;
+            border-radius: 50%;
+            background-color: white;
+        }
+        #star-field {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background-color: black; /* Background color */
+        }
+
         h1 {
-            color: white;
+            
             text-align: center;
+            font-family: 'Star Wars', sans-serif;
+            font-size: 56px;
         }
+        p{
+            font-family: 'Arial', Arial, sans-serif;
+        }
+
         .booster {
             display: flex;
             flex-wrap: wrap;
@@ -66,6 +90,8 @@
     </style>
 </head>
 <body>
+    <div id="star-field"></div>
+
     <h1>SWU Booster Packs</h1>
 
     <form method="GET" action="/">
@@ -215,6 +241,33 @@
                 checkbox.checked = allSelected; // Select or deselect each checkbox
             });
         }
+
+        function createStars(numStars) {
+            const starField = document.getElementById('star-field');
+
+            for (let i = 0; i < numStars; i++) {
+                // Create a star element
+                const star = document.createElement('div');
+                star.className = 'star';
+
+                // Randomize size (1px, 2px, or 3px, 4px)
+                const size = Math.floor(Math.random() * 4) + 1; // Random size between 1 and 4
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+
+                // Randomize position
+                const x = Math.random() * window.innerWidth; // Random x position
+                const y = Math.random() * window.innerHeight; // Random y position
+                star.style.left = `${x}px`;
+                star.style.top = `${y}px`;
+
+                // Append star to the star field
+                starField.appendChild(star);
+            }
+        }
+
+        // Call the function with the desired number of stars
+        createStars(200); // Change the number as needed
 
 
     </script>
