@@ -54,7 +54,7 @@ def get_booster(set='sor',qty = "1",):
             elif v[4] == 'Base' and v[17] != 'Rare' : bases[k] = v
             elif v[17] == 'Common': commons[k] = v
             elif v[17] == 'Uncommon': uncommons[k] = v
-            elif v[17] == 'Rare': rares[k] = v
+            elif v[17] in ['Rare','Special']: rares[k] = v
             elif v[17] == 'Legendary': legendaries[k] = v
 
         # 1 Leader, 1 Base, 9 Commons, 3 Uncommons, 1 Rare/Legendary, 1 random card
