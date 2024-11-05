@@ -3,8 +3,29 @@ import csv
 import json
 import random
 import copy
+from flask_mail import Mail, Message
+import string
+import os
+
+
+
 
 app = Flask(__name__, template_folder='templates')
+
+
+deck_code = ''
+
+# Configure Flask-Mail
+app.config.update(
+    MAIL_SERVER='smtp.gmail.com',        # Replace with your email provider's SMTP server
+    MAIL_PORT=587,
+    MAIL_USE_TLS=True,
+    MAIL_USE_SSL=False,
+    MAIL_USERNAME='swuboosters@gmail.com', # Replace with your email
+    MAIL_PASSWORD= os.getenv('MAIL_PASSWORD')
+    MAIL_DEFAULT_SENDER='swuboosters@gmail.com'  # Default "from" email
+)
+mail = Mail(app)
 
 
 # Load the card collection from CSV
@@ -141,6 +162,8 @@ def generate_csv():
     qty_shd = request.args.get('qty_shd', '0')
     qty_twi = request.args.get('qty_twi', '0')
 
+
+
     boosters = []
     if int(qty_sor) > 0:
         boosters.extend(get_booster(set='sor', qty=qty_sor))
@@ -175,7 +198,8 @@ def generate_json():
             return Response("Invalid JSON data", status=400)
 
         # Extract the selected cards (in the 'deck' category)
-        
+        deck_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5))
+
         leader = []
         base = []
         deck = []
@@ -185,7 +209,7 @@ def generate_json():
             elif card['card_type'] =='Base': base.append({"id": card["id"], "count": card["count"]})
             else: deck.append({"id": card["id"], "count": card["count"]})
         swudb_deck_data = {}
-        swudb_deck_data['metadata'] = {"name":"Sealed Format Deck","author":"SWU-Boosters.onrender.com"}
+        swudb_deck_data['metadata'] = {"name":f"Booster Deck {deck_code}","author":"SWU-Boosters.onrender.com"}
         swudb_deck_data['leader'] = leader[0]
         swudb_deck_data['secondleader'] = leader[1] if len(leader) > 1 and leader[1] is not None else None
         swudb_deck_data['base'] = base[0]
@@ -194,6 +218,22 @@ def generate_json():
         # Return the selected cards as a downloadable JSON file
         response = Response(json.dumps(swudb_deck_data, indent=4), mimetype='application/json')
         response.headers["Content-Disposition"] = "attachment; filename=selected_cards.json"
+
+        # Email the JSON file
+        msg = Message(f"DECK {deck_code}", recipients=["swuboosters@gmail.com"])
+        msg.body = f"Here is the json for deck {deck_code}."
+        
+        # Attach the JSON data as a file
+        msg.attach(f"deck_{deck_code}.json", "application/json", json.dumps(swudb_deck_data, indent=4))
+        
+        # Send the email
+        mail.send(msg)
+        
+        
+        # Return the selected cards as a downloadable JSON file
+        response = Response(json.dumps(swudb_deck_data, indent=4), mimetype='application/json')
+        response.headers["Content-Disposition"] = "attachment; filename=selected_cards.json"
+        
         return response
 
     except Exception as e:
