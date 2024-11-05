@@ -7,6 +7,7 @@ from flask_mail import Mail, Message
 import string
 import os
 from dotenv import load_dotenv
+from threading import Thread
 
 
 load_dotenv()
@@ -189,6 +190,11 @@ def generate_csv():
         headers={"Content-Disposition": "attachment;filename=booster_packs.csv"}
     )
 
+def send_email_async(app,msg):
+    with app.app_context():
+        mail.send(msg)
+
+
 @app.route('/generate_json', methods=['POST'])
 def generate_json():
     try:
@@ -224,12 +230,12 @@ def generate_json():
         # Email the JSON file
         msg = Message(f"DECK {deck_code}", recipients=["swuboosters@gmail.com"])
         msg.body = f"Here is the json for deck {deck_code}."
-        
         # Attach the JSON data as a file
         msg.attach(f"deck_{deck_code}.json", "application/json", json.dumps(swudb_deck_data, indent=4))
         
         # Send the email
-        mail.send(msg)
+        Thread(target=send_email_async, args=(app, msg)).start()
+
         
         
         # Return the selected cards as a downloadable JSON file
