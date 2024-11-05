@@ -22,7 +22,7 @@ app.config.update(
     MAIL_USE_TLS=True,
     MAIL_USE_SSL=False,
     MAIL_USERNAME='swuboosters@gmail.com', # Replace with your email
-    MAIL_PASSWORD= os.getenv('MAIL_PASSWORD')
+    MAIL_PASSWORD= os.getenv('MAIL_PASSWORD'),
     MAIL_DEFAULT_SENDER='swuboosters@gmail.com'  # Default "from" email
 )
 mail = Mail(app)
