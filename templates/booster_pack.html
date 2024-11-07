@@ -145,7 +145,7 @@
                     <p>{{ card[0] | upper }} - {{ card[4] }}</p>
                     <p>{{ card[-1] }}</p>
                     <!-- Add a checkbox for each card  THIS NEEDS FIXING-->
-                    <input type="checkbox" name="selected_cards" value="{{ card[0] | upper }},{{card[1]}},{{card[4]}}" id="card_{{ loop.index }}">
+                    <input type="checkbox" name="selected_cards" value="{{ card[0] | upper }},{{card[19]}},{{card[4]}}" id="card_{{ loop.index }}">
                     <label for="card_{{ loop.index }}">Select this card</label>
                 </div>
                 {% endfor %}

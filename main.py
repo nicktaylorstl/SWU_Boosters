@@ -37,10 +37,20 @@ with open('SWU_all_cards.csv', 'r', encoding='ISO-8859-1') as file:
     Reader = csv.reader(file)
     for line in Reader:
         collection.append(line)
-
-
+showcase_collection = []
+with open('SWU_showcase.csv', 'r', encoding='ISO-8859-1') as file:
+    Reader = csv.reader(file)
+    for line in Reader:
+        showcase_collection.append(line)
+hyperspace_collection = []
+with open('SWU_hyperspace.csv', 'r', encoding='ISO-8859-1') as file:
+    Reader = csv.reader(file)
+    for line in Reader:
+        hyperspace_collection.append(line)
 
 full_card_pool = []
+full_showcase_pool = []
+full_hyperspace_pool = []
 
 # Ensure each card appears in the pool according to its count in the collection
 for c in collection[1:]:
@@ -49,16 +59,46 @@ for c in collection[1:]:
     for i in range(count):
         full_card_pool.append(card)
 
+for c in showcase_collection[1:]:
+    count = int(c[4])
+    card = c[:4] + c[5:]
+    for i in range(count):
+        full_showcase_pool.append(card)
+
+for c in hyperspace_collection[1:]:
+    count = int(c[4])
+    card = c[:4] + c[5:]
+    for i in range(count):
+        full_hyperspace_pool.append(card)
+
+
+
 # This creates one booster pack according to the distribution rules
 def get_booster(set='sor',qty = "1",):
 
     card_pool = {}
+    showcase_pool = {}
+    hyperspace_pool = {}
     packs = []
     
     index = 0
     for c in full_card_pool:
-        if (set == 'any' and c[0] != 'twi') or c[0] == set:
+        if  c[0] == set:
             card_pool[index] = c
+            index += 1
+
+    index = 0
+    showcase_number = random.randint(1, 288)
+    for c in full_showcase_pool:
+        if  c[0] == set:
+            showcase_pool[index] = c
+            index += 1
+
+    index = 0
+    hyperspace_number = random.randint(1, 3)
+    for c in full_hyperspace_pool:
+        if  c[0] == set:
+            hyperspace_pool[index] = c
             index += 1
 
     rare_leaders = {}
@@ -87,6 +127,10 @@ def get_booster(set='sor',qty = "1",):
         if random_number == 6: leader_index = random.choice(list(rare_leaders.keys()))
         else: leader_index = random.choice(list(leaders.keys()))
         leader = copy.deepcopy(card_pool[leader_index])
+        if showcase_number <= 10 and len(showcase_pool) >0: 
+            leader_index = random.choice(list(showcase_pool.keys()))
+            leader = copy.deepcopy(showcase_pool[leader_index])
+
         leader.append('1 Leader')
         pack.append(leader)
 
