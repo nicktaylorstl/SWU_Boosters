@@ -88,18 +88,34 @@ def get_booster(set='sor',qty = "1",):
             index += 1
 
     index = 0
-    showcase_number = random.randint(1, 288)
+
     for c in full_showcase_pool:
         if  c[0] == set:
             showcase_pool[index] = c
             index += 1
 
+
     index = 0
-    hyperspace_number = random.randint(1, 3)
     for c in full_hyperspace_pool:
         if  c[0] == set:
             hyperspace_pool[index] = c
             index += 1
+
+    hyperspace_leader_pool = {}
+    index = 0
+    for c in full_hyperspace_pool:
+        if  c[0] == set and c[4] == "Leader":
+            hyperspace_leader_pool[index] = c
+            index += 1
+
+    hyperspace_base_pool = {}
+    index = 0
+    for c in full_hyperspace_pool:
+        if  c[0] == set and c[4] == "Base":
+            hyperspace_base_pool[index] = c
+            index += 1
+
+
 
     rare_leaders = {}
     leaders = {}
@@ -110,6 +126,29 @@ def get_booster(set='sor',qty = "1",):
     legendaries = {}
 
     for i in range(int(qty)):
+
+        hyperspace_number = random.randint(1, 100)
+        hyper = "None"
+        if hyperspace_number == 2: hyper = "Legendary"
+        elif hyperspace_number <= 9: hyper = "Rare"
+        elif hyperspace_number <= 22: hyper = "Uncommon"
+        elif hyperspace_number <= 62: hyper = "Common"
+
+        hyperspace_leader_number = random.randint(1, 20)
+        hyper_leader = False
+        if hyperspace_leader_number == 1: hyper_leader = True
+
+        hyperspace_base_number = random.randint(1, 20)
+        hyper_base = False
+        if hyperspace_base_number == 1: hyper_base = True
+
+        hyperspace_foil_number = random.randint(1, 20)
+        hyper_foil = False
+        if hyperspace_foil_number == 1: hyper_foil = True
+
+        showcase_number = random.randint(1, 288)
+        showcase_leader = False
+        if showcase_number <=10: showcase_leader = True
 
         pack = []
         for k, v in card_pool.items():
@@ -127,15 +166,26 @@ def get_booster(set='sor',qty = "1",):
         if random_number == 6: leader_index = random.choice(list(rare_leaders.keys()))
         else: leader_index = random.choice(list(leaders.keys()))
         leader = copy.deepcopy(card_pool[leader_index])
-        if showcase_number <= 10 and len(showcase_pool) >0: 
+        if showcase_leader and len(showcase_pool) >0: 
             leader_index = random.choice(list(showcase_pool.keys()))
             leader = copy.deepcopy(showcase_pool[leader_index])
+        elif hyper_leader and len(hyperspace_leader_pool) > 0:
+            leader_index = random.choice(list(hyperspace_leader_pool.keys()))
+            leader = copy.deepcopy(hyperspace_leader_pool[leader_index])
 
         leader.append('1 Leader')
         pack.append(leader)
 
+
         base_index = random.choice(list(bases.keys()))
         base = copy.deepcopy(card_pool[base_index])
+        if hyper_base and len(hyperspace_base_pool) > 0:
+            base_index = random.choice(list(hyperspace_base_pool.keys()))
+            base = copy.deepcopy(hyperspace_base_pool[base_index])
+            while base[-3] == "Rare":
+                base_index = random.choice(list(hyperspace_base_pool.keys()))
+                base = copy.deepcopy(hyperspace_base_pool[base_index]) 
+
         base.append('1 Base')
         pack.append(base)
         
@@ -147,6 +197,12 @@ def get_booster(set='sor',qty = "1",):
             common_indeces.append(common_index)
 
             common = copy.deepcopy(card_pool[common_index])
+            if hyper == "Common" and i == 0:
+                card_number = common[-1]
+                card_name = common[2]
+                for k,v in hyperspace_pool.items():
+                    if v[-1] == card_number and v[2] == card_name:
+                        common = copy.deepcopy(v)
             common.append(f"{i+1} of 9 Commons")
             pack.append(common)
         
@@ -158,6 +214,16 @@ def get_booster(set='sor',qty = "1",):
             uncommon_indeces.append(uncommon_index)
             
             uncommon = copy.deepcopy(card_pool[uncommon_index])
+
+            if hyper == "Uncommon" and i == 0:
+                card_number = uncommon[-1]
+                card_name = uncommon[2]
+                print(uncommon[2])
+                for k,v in hyperspace_pool.items():
+                    if v[-1] == card_number and v[2] == card_name:
+                        uncommon = copy.deepcopy(v)
+                print(uncommon[2])
+
             uncommon.append(f"{i+1} of 3 Uncommons")
             pack.append(uncommon)
 
@@ -167,6 +233,12 @@ def get_booster(set='sor',qty = "1",):
         else:
             rare_index = random.choice(list(rares.keys()))
         rare = copy.deepcopy(card_pool[rare_index])
+        if hyper == "Rare" or hyper == "Legendary":
+            card_number = rare[-1]
+            card_name = rare[2]
+            for k,v in hyperspace_pool.items():
+                if v[-1] == card_number and v[2] == card_name:
+                    rare = copy.deepcopy(v)
         rare.append("1 Rare or Legendary")
         pack.append(rare)
 
@@ -175,7 +247,17 @@ def get_booster(set='sor',qty = "1",):
         while any_card_type == 'Leader' or any_card_type == 'Base':
             any_card_index = random.choice(list(card_pool.keys()))
             any_card_type = card_pool[any_card_index][4]
-        any_card = copy.deepcopy(card_pool[any_card_index])    
+        any_card = copy.deepcopy(card_pool[any_card_index])  
+
+        if hyper_foil:
+            any_card_index = random.choice(list(hyperspace_pool.keys()))
+            any_card_type = hyperspace_pool[any_card_index][4]
+            while any_card_type == 'Leader' or any_card_type == 'Base':
+                any_card_index = random.choice(list(hyperspace_pool.keys()))
+                any_card_type = hyperspace_pool[any_card_index][4]
+            any_card = copy.deepcopy(hyperspace_pool[any_card_index]) 
+
+
         any_card.append("1 'Foil' of any rarity")
         pack.append(any_card)
         packs.append(pack)
