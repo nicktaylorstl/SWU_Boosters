@@ -118,8 +118,8 @@
             </select>
             <p>(TWI now complete!)</p>
             <div style="width: 100%; height: 10px;"></div>
-            <button type="submit">Generate Packs as Images</button>
-            <button type="button" onclick="generateCSV()">Generate Packs as CSV</button>
+            <button type="submit">Generate Packs</button>
+            <!--<button type="button" onclick="generateCSV()">Generate Packs as CSV</button>-->
         </div>
     </form>
     <div class="buttons">
@@ -130,7 +130,8 @@
     <p style="text-align: center;">Select the cards you want to add to your deck and then click "Create Deck Json"</p>
     <p style="text-align: center;">You can copy the json and paste it directly into karabast where it asks for deck link</p>
     <p style="text-align: center;">If you don't select a leader or base, it won't work. If you select two leaders or bases, it will only accept the first of each.</p>
-    <p style="text-align: center;">Special cards are included with Rares because I just want them to be, and I've built this for fun, not just for making super accurate boosters</p>
+    <p style="text-align: center;">Previously I included Starter Exclusive cards in the mix but it seems people didn't want that.</p>
+    <p style="text-align: center;">Shoot me an email at swuboosters@gmail.com if that's something you'd prefer</p>
 
     <form id="jsonForm" method="POST" action="/generate_json">
         <div class="boosters">
