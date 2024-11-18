@@ -129,7 +129,7 @@ def get_booster(set='sor',qty = "1",):
 
         hyperspace_number = random.randint(1, 100)
         hyper = "None"
-        if hyperspace_number == 2: hyper = "Legendary"
+        if hyperspace_number <= 2: hyper = "Legendary"
         elif hyperspace_number <= 9: hyper = "Rare"
         elif hyperspace_number <= 22: hyper = "Uncommon"
         elif hyperspace_number <= 62: hyper = "Common"
@@ -223,6 +223,19 @@ def get_booster(set='sor',qty = "1",):
                         uncommon = copy.deepcopy(v)
                 print(uncommon[2])
 
+            if (hyper == "Rare" or hyper == "Legendary") and i == 2:
+                random_number = random.randint(1, 8)
+                if len(legendaries) > 0 and hyper == "Legendary":
+                    rare_index = random.choice(list(legendaries.keys()))
+                else:
+                    rare_index = random.choice(list(rares.keys()))
+                rare = copy.deepcopy(card_pool[rare_index])
+                card_number = rare[-1]
+                card_name = rare[2]
+                for k,v in hyperspace_pool.items():
+                    if v[-1] == card_number and v[2] == card_name:
+                        uncommon = copy.deepcopy(v)
+
             uncommon.append(f"{i+1} of 3 Uncommons")
             pack.append(uncommon)
 
@@ -232,12 +245,15 @@ def get_booster(set='sor',qty = "1",):
         else:
             rare_index = random.choice(list(rares.keys()))
         rare = copy.deepcopy(card_pool[rare_index])
-        if hyper == "Rare" or hyper == "Legendary":
-            card_number = rare[-1]
-            card_name = rare[2]
-            for k,v in hyperspace_pool.items():
-                if v[-1] == card_number and v[2] == card_name:
-                    rare = copy.deepcopy(v)
+
+        # RARE AND LEGENDARY HYPERSPACE SHOULD BE IN UNCOMMONS, NOT HERE
+        # if hyper == "Rare" or hyper == "Legendary":
+        #     card_number = rare[-1]
+        #     card_name = rare[2]
+        #     for k,v in hyperspace_pool.items():
+        #         if v[-1] == card_number and v[2] == card_name:
+        #             rare = copy.deepcopy(v)
+
         rare.append("1 Rare or Legendary")
         pack.append(rare)
 
