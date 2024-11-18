@@ -1,4 +1,4 @@
-cd E:\StarWarsUnlimited\SWU_Boosters\
+cd cd E:\StarWarsUnlimited\SWU_Boosters\
 
 python update_swu_database.py
 git add .
